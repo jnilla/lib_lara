@@ -1,0 +1,22 @@
+{
+	"name": "jnilla/jom",
+	"type": "library",
+	"description": "Jom is a Joomla API facade",
+	"keywords": ["php","api","facade", "joomla"],
+	"homepage": "https://github.com/jnilla/jom",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Edric Navarro",
+			"email": "digitalcomputer2142@gmail.com",
+			"homepage": "https://github.com/jnilla",
+			"role": "Developer"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"": "src/"
+		}
+	}
+}
+

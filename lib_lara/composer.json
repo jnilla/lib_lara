@@ -1,0 +1,10 @@
+{
+	"autoload" : {
+		"psr-4" : {
+			"Jnilla\\Lara\\" : "src/"
+		}
+	},
+    "require": {
+        "jnilla/jom": "dev-main"
+    }
+}
