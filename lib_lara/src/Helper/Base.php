@@ -3,6 +3,7 @@ namespace Jnilla\Lara\Helper;
 
 defined('_JEXEC') or die;
 
+use Jnilla\Jom\Jom as Jom;
 use Joomla\CMS\Factory as JFactory;
 use Joomla\CMS\Language\Text as JText;
 use Joomla\CMS\Object\CMSObject as JObject;

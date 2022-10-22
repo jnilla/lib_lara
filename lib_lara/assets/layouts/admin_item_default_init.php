@@ -8,7 +8,7 @@ JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.keepalive');
-JHtml::_('behavior.tabstate');
+// JHtml::_('behavior.tabstate');
 ?>
 <script type="text/javascript">
 	js = jQuery.noConflict();

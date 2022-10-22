@@ -1,0 +1,8 @@
+form .form-actions {
+    margin: 10px 0;
+    padding: 10px;
+}
+
+form .js-stools-container-bar [for="filter_search"]{
+    display: none;
+}

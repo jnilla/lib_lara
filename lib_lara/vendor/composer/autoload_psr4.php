@@ -7,5 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Jnilla\\Lara\\' => array($baseDir . '/src'),
-    '' => array($vendorDir . '/jnilla/jom/src'),
+    'Jnilla\\Jom\\' => array($vendorDir . '/jnilla/jom/src'),
 );

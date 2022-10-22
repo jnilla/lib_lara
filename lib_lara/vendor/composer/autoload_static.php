@@ -10,6 +10,7 @@ class ComposerStaticInit9dda375904eb4842e48ae0a2475f6d20
         'J' => 
         array (
             'Jnilla\\Lara\\' => 12,
+            'Jnilla\\Jom\\' => 11,
         ),
     );
 
@@ -18,10 +19,10 @@ class ComposerStaticInit9dda375904eb4842e48ae0a2475f6d20
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
-    );
-
-    public static $fallbackDirsPsr4 = array (
-        0 => __DIR__ . '/..' . '/jnilla/jom/src',
+        'Jnilla\\Jom\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jnilla/jom/src',
+        ),
     );
 
     public static $classMap = array (
@@ -33,7 +34,6 @@ class ComposerStaticInit9dda375904eb4842e48ae0a2475f6d20
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit9dda375904eb4842e48ae0a2475f6d20::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit9dda375904eb4842e48ae0a2475f6d20::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInit9dda375904eb4842e48ae0a2475f6d20::$fallbackDirsPsr4;
             $loader->classMap = ComposerStaticInit9dda375904eb4842e48ae0a2475f6d20::$classMap;
 
         }, null, ClassLoader::class);

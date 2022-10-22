@@ -7,21 +7,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jnilla/jom.git",
-                "reference": "309204518578a283419e96b1e58d990a8fa8b1c7"
+                "reference": "edf93641a7b4cf34a54b11713bb36db87b45b5c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jnilla/jom/zipball/309204518578a283419e96b1e58d990a8fa8b1c7",
-                "reference": "309204518578a283419e96b1e58d990a8fa8b1c7",
+                "url": "https://api.github.com/repos/jnilla/jom/zipball/edf93641a7b4cf34a54b11713bb36db87b45b5c9",
+                "reference": "edf93641a7b4cf34a54b11713bb36db87b45b5c9",
                 "shasum": ""
             },
-            "time": "2022-10-16T21:32:37+00:00",
+            "time": "2022-10-20T16:28:52+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
             "autoload": {
                 "psr-4": {
-                    "": "src/"
+                    "Jnilla\\Jom\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",

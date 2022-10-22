@@ -6,6 +6,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\View\HtmlView as JViewLegacy;
 use Exception;
 use Jnilla\Lara\Helper\Base as BaseHelper;
+use Jnilla\Jom\Jom as Jom;
 
 /**
  * Base item view class
@@ -19,6 +20,8 @@ class BaseItem extends JViewLegacy{
 	protected $item;
 
 	protected $form;
+
+	protected $isNew;
 
 	/**
 	 * Constructor
@@ -48,6 +51,7 @@ class BaseItem extends JViewLegacy{
 		$this->state = $model->getState();
 		$this->item = $model->getItem();
 		$this->form = $model->getForm();
+		$this->isNew = Jom::getFieldValue($this->form, 'id') === null;
 
 		// Check for errors
 		if(count($errors = $this->get('Errors'))){

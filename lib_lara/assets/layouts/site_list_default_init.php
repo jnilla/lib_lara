@@ -7,6 +7,7 @@ use Joomla\CMS\Router\Route as JRoute;
 use Joomla\CMS\Layout\LayoutHelper as JLayoutHelper;
 use Joomla\CMS\Language\Text as JText;
 use Joomla\CMS\Uri\Uri as JUri;
+use Jnilla\Jom\Jom as Jom;
 
 // Extract framework configurations
 extract($this->frameworkConfigurations);
@@ -15,6 +16,7 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.formvalidator');
+Jom::css('media/lib_lara/css/site_list_default.css');
 
 $app = JFactory::getApplication();
 $user = JFactory::getUser();

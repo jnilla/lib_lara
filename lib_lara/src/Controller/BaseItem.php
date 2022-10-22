@@ -2,13 +2,14 @@
 namespace Jnilla\Lara\Controller;
 
 use Jnilla\Lara\Helper\Base as BaseHelper;
+use Joomla\CMS\MVC\Controller\FormController as JControllerForm;
 
 defined('_JEXEC') or die;
 
 /**
  * Base item controller class
  */
-class BaseItem extends \Joomla\CMS\MVC\Controller\FormController{
+class BaseItem extends JControllerForm{
 
 	public $frameworkConfigurations = array();
 

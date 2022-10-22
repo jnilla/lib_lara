@@ -1,7 +1,7 @@
 <?php
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Factory as JFactory;
+use Jnilla\Jom\Jom as Jom;
 use Joomla\CMS\Language\Text as JText;
 
 // Extract framework configurations
@@ -12,6 +12,7 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.tabstate');
+Jom::css('media/lib_lara/css/site_item_default.css');
 
 // Define page heading
 $pageHeading = JText::_("LIB_LARA_EDITING_ITEM")." id ".$this->item->id;
