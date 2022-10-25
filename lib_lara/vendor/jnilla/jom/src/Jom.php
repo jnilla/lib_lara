@@ -12,6 +12,7 @@ use Joomla\CMS\Application\CMSApplication as JApplicationCms;
 use Joomla\CMS\Document\Document as JDocument;
 use Joomla\CMS\Layout\LayoutHelper as JLayoutHelper;
 use Joomla\CMS\Filesystem\Folder as JFolder;
+use Joomla\CMS\Filesystem\File as JFile;
 use Joomla\CMS\Router\Route as JRoute;
 use Joomla\CMS\Session\Session as JSession;
 use Joomla\CMS\Form\Form as JForm;
@@ -106,7 +107,15 @@ class Jom
 	 * @return string|array|null
 	 * 		Variable value
 	 */
-	public static function req($key = null, $default = null, $filter = 'STRING'){
+	public static function req($key = null, $default = null, $filter = 'cmd'){
+		// Check if the key is trying to get the value from an array
+		if(strpos($key, '[') !== false){
+			$key = explode('[', $key);
+			$key[1] = explode(']', $key[1])[0];
+			$value = self::app()->input->get($key[0], $default, $filter);
+			return isset($value[$key[1]]) ? $value[$key[1]] : null;
+		}
+
 		return self::app()->input->get($key, $default, $filter);
 	}
 
@@ -656,7 +665,7 @@ class Jom
 	 * @return void
 	 */
 	public static function mkdir($path, $permissions = 0777){
-		@mkdir($path, 0777, true);
+		@mkdir($path, 0755, true);
 	}
 
 	/**
@@ -849,6 +858,62 @@ class Jom
 	public static function addFieldOption($form, $name, $value, $text){
 		$field = self::getField($form, $name);
 		$field->addOption($text, ['value' => $value]);
+	}
+
+	/**
+	 * Copy a file or folder
+	 * 
+	 * @param string $source
+	 *     Source path
+	 * @param string $destination
+	 *     Destination path
+	 *
+	 * @return void
+	 */  
+	public static function copy($source, $destination){
+		self::mkdir(dirname($destination));
+
+		if(is_file($source)){
+			JFile::copy($source, $destination);
+		}else{
+			JFolder::copy($source, $destination, null, true);
+		}
+	}
+
+	/**
+	 * Move or rename a file or folder
+	 * 
+	 * @param string $source
+	 *     Source path
+	 * @param string $destination
+	 *     Destination path
+	 *
+	 * @return void
+	 */  
+	public static function move($source, $destination){
+		self::mkdir(dirname($destination));
+
+		if(is_file($source)){
+			JFile::move($source, $destination);
+		}else{
+			JFolder::move($source, $destination);
+		}
+	}
+
+	/**
+	 * Deletes a file or folder
+	 * 
+	 * @param string $path
+	 *     File path
+	 *
+	 * @return void
+	 */  
+	public static function delete($path){
+		if(is_file($path)){
+			JFile::delete($path);
+		}else{
+			JFolder::delete($path);
+		}
 	}
 }
 
