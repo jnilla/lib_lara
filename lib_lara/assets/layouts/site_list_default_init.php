@@ -16,7 +16,7 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.formvalidator');
-Jom::css('media/lib_lara/css/site_list_default.css');
+Jom::addCss('media/lib_lara/css/site_list_default.css');
 
 $app = JFactory::getApplication();
 $user = JFactory::getUser();

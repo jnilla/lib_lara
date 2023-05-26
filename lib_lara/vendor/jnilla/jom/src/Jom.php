@@ -16,6 +16,10 @@ use Joomla\CMS\Filesystem\File as JFile;
 use Joomla\CMS\Router\Route as JRoute;
 use Joomla\CMS\Session\Session as JSession;
 use Joomla\CMS\Form\Form as JForm;
+use Joomla\CMS\Component\ComponentHelper as JComponentHelper;
+use Joomla\CMS\Helper\ModuleHelper as JModuleHelper;
+use Joomla\Registry\Registry as JRegistry;
+
 
 /**
  * Jom is a Joomla API facade
@@ -69,21 +73,36 @@ class Jom
 	 *
 	 * @return JApplicationCms
 	 */
-	public static function app(){
+	public static function getApplication(){
 		return JFactory::getApplication();
 	}
 
 	/**
-	 * Retuns a global configuration value
+	 * Return a value from the site global configurations
 	 *
-	 * @param string $name
+	 * @param string $configurationName
 	 *     Configuration name
 	 * 
 	 * @return mixed
 	 *     Configuration value
 	 */
-	public static function conf($name){
-		return JFactory::getConfig()->get($name);
+	public static function getSiteConfiguration($configurationName){
+		return JFactory::getConfig()->get($configurationName);
+	}
+
+	/**
+	 * Return a value from a component configurations
+	 *
+	 * @param string $componentName
+	 *     Component name in lowercase. e.g: com_exmaple 
+	 * @param string $configurationName
+	 *     Configuration name
+	 * 
+	 * @return mixed
+	 *     Configuration value
+	 */
+	public static function getComponentConfiguration($componentName, $configurationName){
+		return JComponentHelper::getParams($componentName)->get($configurationName);
 	}
 
 	/**
@@ -91,7 +110,7 @@ class Jom
 	 *
 	 * @return JDocument
 	 */
-	public static function doc(){
+	public static function getDocument(){
 		return JFactory::getDocument();
 	}
 
@@ -107,16 +126,16 @@ class Jom
 	 * @return string|array|null
 	 * 		Variable value
 	 */
-	public static function req($key = null, $default = null, $filter = 'cmd'){
+	public static function getRequest($key = null, $default = null, $filter = 'CMD'){
 		// Check if the key is trying to get the value from an array
 		if(strpos($key, '[') !== false){
 			$key = explode('[', $key);
 			$key[1] = explode(']', $key[1])[0];
-			$value = self::app()->input->get($key[0], $default, $filter);
+			$value = self::getApplication()->input->get($key[0], $default, $filter);
 			return isset($value[$key[1]]) ? $value[$key[1]] : null;
 		}
 
-		return self::app()->input->get($key, $default, $filter);
+		return self::getApplication()->input->get($key, $default, $filter);
 	}
 
 	/**
@@ -130,7 +149,7 @@ class Jom
 	 */
 	public static function redirect($url = null){
 		if($url === null){
-			$url = self::absoluteUrl();
+			$url = self::getAbsoluteUrl();
 		}
 
 		$url = trim($url);
@@ -138,9 +157,9 @@ class Jom
 
 		preg_match('/^https?:/i', $url, $result);
 		if(empty($result)){
-			self::app()->redirect(self::baseUrl()."$url");
+			self::getApplication()->redirect(self::getBaseURL()."$url");
 		}else{
-			self::app()->redirect($url);
+			self::getApplication()->redirect($url);
 		}
 	}
 
@@ -149,7 +168,7 @@ class Jom
 	 *
 	 * @return JUri
 	 */
-	public static function uri(){
+	public static function getUri(){
 		return JUri::getInstance();
 	}
 
@@ -159,7 +178,7 @@ class Jom
 	 * @return string
 	 *     The site base URL.
 	 */
-	public static function baseUrl(){
+	public static function getBaseUrl(){
 		return JUri::base();
 	}
 
@@ -169,7 +188,7 @@ class Jom
 	 * @return string
 	 *     The site base URL.
 	 */
-	public static function relativeUrl(){
+	public static function getRelativeUrl(){
 		return JUri::base(true)."/";
 	}
 
@@ -179,7 +198,7 @@ class Jom
 	 * @return string
 	 *     The site base URL.
 	 */
-	public static function absoluteUrl(){
+	public static function getAbsoluteUrl(){
 		return JUri::getInstance()->tostring();
 	}
 
@@ -193,8 +212,8 @@ class Jom
 	 *
 	 * @return void
 	 */
-	public static function message($msg, $type = 'message'){
-		self::app()->enqueueMessage($msg, $type);
+	public static function addSystemMessage($msg, $type = 'message'){
+		self::getApplication()->enqueueMessage($msg, $type);
 	}
 
 	/**
@@ -232,8 +251,10 @@ class Jom
 	 *	  Data to send
 	 * @return void
 	 */
-	public static function jres($data = null, $pretty = false){
+	public static function sendJsonResponse($data = null, $pretty = true){
+		// ob_end_clean();
 		header('Content-Type: application/json');
+
 		if($pretty){
 			echo json_encode($data, JSON_PRETTY_PRINT);
 		}else{
@@ -248,7 +269,7 @@ class Jom
 	 * @return boolean
 	 */
 	public static function isBackend(){
-		return self::app()->getClientId() == 1;
+		return self::getApplication()->getClientId() == 1;
 	}
 
 	/**
@@ -268,7 +289,7 @@ class Jom
 	 *
 	 * @return void
 	 */
-	public static function css($url){
+	public static function addCss($url){
 		JHtml::stylesheet($url);
 	}
 
@@ -280,8 +301,8 @@ class Jom
 	 *
 	 * @return void
 	 */
-	public static function inlineCss($declaration){
-		self::doc()->addStyleDeclaration($declaration);
+	public static function addInlineCss($declaration){
+		self::getDocument()->addStyleDeclaration($declaration);
 	}
 
 	/**
@@ -290,7 +311,7 @@ class Jom
 	 * @param string $url
 	 *     Script file URL.
 	 */
-	public static function js($url){
+	public static function addJs($url){
 		JHtml::script($url);
 	}
 
@@ -302,8 +323,8 @@ class Jom
 	 *
 	 * @return array
 	 */
-	public static function inlineJs($declaration){
-		self::doc()->addScriptDeclaration($declaration);
+	public static function addInlineJs($declaration){
+		self::getDocument()->addScriptDeclaration($declaration);
 	}
 	
 	/**
@@ -311,12 +332,45 @@ class Jom
 	 *
 	 * @return JDatabaseDriver
 	 */
-	public static function db(){
+	public static function getDbo(){
 		return JFactory::getDBO();
 	}
 
 	/**
-	 * Executes a SQL query and returns all rows
+	 * List the DB tables
+	 *
+	 * @return array
+	 */
+	public static function dbListTables(){
+		return JFactory::getDBO()->getTableList();
+	}
+
+	/**
+	 * List a DB table columns
+	 * 
+	 * @param string $tableName
+	 *     Table name to list the columns from
+	 * 
+	 * @param string $detailed
+	 *     If true returns detailed information of each column
+	 *
+	 * @return array
+	 */
+	public static function dbListColumns($tableName, $detailed = false){
+		$tables = JFactory::getDBO()->getTableColumns($tableName, false);
+		$tables2 = [];
+		if($detailed === true){
+			return $tables;
+		}else{
+			foreach ($tables as $tableKey => $tableValue) {
+				$tables2[] = $tableKey;
+			}
+			return $tables2;
+		}
+	}
+
+	/**
+	 * Executes a SELECT SQL query and returns all rows
 	 *
 	 * @param string $query
 	 * 		Query string
@@ -326,8 +380,8 @@ class Jom
 	 * @return array
 	 *     array with results
 	 */
-	public static function query($query, $bindings = []){
-		$db = self::db();
+	public static function dbSelect($query, $bindings = []){
+		$db = self::getDbo();
 		
 		// Set Query
 		$query = self::prepareQueryBindings($query, $bindings);
@@ -336,9 +390,9 @@ class Jom
 		// Execute and return
 		return $db->loadAssocList();
 	}
-	
+
 	/**
-	 * Executes a SQL query and returns the first row
+	 * Executes a SELECT SQL query and returns the first row
 	 *
 	 * @param string $query
 	 * 		Query string
@@ -346,18 +400,75 @@ class Jom
 	 * 		Query string bindings
 	 *
 	 * @return array
+	 *     array with results
 	 */
-	public static function queryOne($query, $bindings = []){
-		$db = self::db();
+	public static function dbSelectOne($query, $bindings = []){
+		$db = self::getDbo();
+		
+		// Set Query
+		$query .= "\n LIMIT 1";
+		$query = self::prepareQueryBindings($query, $bindings);
+		$db->setQuery($query);
 
+		// Execute and return
+		return $db->loadAssoc();
+	}
+
+	/**
+	 * Executes a SELECT SQL query and returns the rows in chunks through a callback
+	 * 
+	 * Note: The query should not have LIMIT or OFFSET in it because this 
+	 * function will add it automatically
+	 *
+	 * @param string $query
+	 * 		Query string
+	 * @param array $bindings
+	 * 		Query string bindings
+	 * @param integer $chunkSize
+	 * 		Chunk size
+	 * @param callable
+	 * 		Callback with chunk rows. Return false from whithin 
+	 *      the callback function to break the loop.
+	 *
+	 * @return void
+	 */
+	public static function dbSelectChunk($query, $bindings, $chunkSize, $callback){
+		$offset = 0;
+		do {
+			$bindings['limit'] = $chunkSize;
+			$bindings['offset'] = $offset;
+			$query .= "\n LIMIT :limit OFFSET :offset";
+			$rows = self::dbSelect($query, $bindings);
+			if(!$rows){
+				return;
+			}
+			if($callback($rows) === false){
+				return;
+			}
+			$offset = $offset+$chunkSize;
+		} while ($rows);
+	}
+	
+	/**
+	 * Executes an SQL query
+	 *
+	 * @param string $query
+	 * 		Query string
+	 * @param array $bindings
+	 * 		Query string bindings
+	 *
+	 * @return boolean
+	 *     True if sueccess
+	 */
+	public static function dbQuery($query, $bindings = []){
+		$db = self::getDBO();
+		  
 		// Set Query
 		$query = self::prepareQueryBindings($query, $bindings);
 		$db->setQuery($query);
 
 		// Execute and return
-		$rows = $db->loadAssoc();
-
-		return $db->loadAssoc();
+		return $db->execute();
 	}
 	
 	/**
@@ -371,7 +482,7 @@ class Jom
 	 * @return array
 	 */
 	private static function prepareQueryBindings($query, $bindings = []){
-		$db = self::db();
+		$db = self::getDbo();
 		$time = microtime(true);
 		
 		if(!empty($bindings)){
@@ -409,39 +520,8 @@ class Jom
 	 *
 	 * @return array
 	 */
-	public static function queryExists($query, $bindings = []){
-		return !!self::query($query, $bindings);
-	}
-
-	/**
-	 * Executes a SQL query and returns the rows in chunks to a callback
-	 * 
-	 * Note: The query should not have LIMIT or OFFSET in it because this 
-	 * function will add it automatically
-	 *
-	 * @param string $query
-	 * 		Query string
-	 * @param array $bindings
-	 * 		Query string bindings
-	 * @param integer $size
-	 * 		Chunk size
-	 * @param callable
-	 * 		Callback with chunk rows. Return false to break the chunk loop.
-	 *
-	 * @return void
-	 */
-	public static function queryChunk($query, $bindings = [], $size, $callback){
-		$offset = 0;
-		do {
-			$rows = self::query("$query \n LIMIT $size OFFSET $offset", $bindings);
-			if(!$rows){
-				return;
-			}
-			if($callback($rows) === false){
-				return;
-			}
-			$offset = $offset+$size;
-		} while ($rows);
+	public static function dbExists($query, $bindings = []){
+		return !!self::dbSelectOne($query, $bindings);
 	}
 
 	/**
@@ -489,7 +569,7 @@ class Jom
 	 * @return array
 	 *     List of folders
 	 */
-	public static function folders($path, $recurse = false, $pathinfo = false){
+	public static function fsListFolders($path, $recurse = false, $pathinfo = false){
 		$items = JFolder::folders($path, '', $recurse, true);
 
 		if($pathinfo){
@@ -517,7 +597,7 @@ class Jom
 	 * @return array
 	 *     List of files
 	 */
-	public static function files($path, $recurse = false, $pathinfo = false){
+	public static function fsListFiles($path, $recurse = false, $pathinfo = false){
 		$items = JFolder::files($path, '', $recurse, true);
 
 		if($pathinfo){
@@ -545,7 +625,7 @@ class Jom
 	 *
 	 * @return void
 	 */
-	public static function zip($source, $destination = ''){
+	public static function fsZip($source, $destination = ''){
 		// Check if the php zip extension is loaded
 		if (!extension_loaded('zip')) {
 			throw new \ErrorException("PHP zip extension is not loaded", 500);
@@ -624,7 +704,7 @@ class Jom
 	 *
 	 * @return void
 	 */
-	public static function unzip($source, $destination = ''){
+	public static function fsUnzip($source, $destination = ''){
 		// Check if the php zip extension is loaded
 		if (!extension_loaded('zip')) {
 			throw new \ErrorException("PHP zip extension is not loaded", 500);
@@ -664,22 +744,22 @@ class Jom
 	 *
 	 * @return void
 	 */
-	public static function mkdir($path, $permissions = 0777){
+	public static function fsCreateFolder($path, $permissions = 0777){
 		@mkdir($path, 0755, true);
 	}
 
 	/**
-	 * Renders the form token to against CSRF attacks
+	 * Renders the Joomla form token
 	 * 
 	 * @return void
 	 *     Token field
 	 */
-	public static function formToken(){
+	public static function getJoomlaFormToken(){
 		return JHtml::_('form.token');
 	}
 	
 	/**
-	 * Checks the form token to against CSRF attacks
+	 * Checks the Joomla form token
 	 * 
 	 * @param boolean $terminate
 	 *     If true the script will be terminated if the from token is invalid
@@ -687,7 +767,7 @@ class Jom
 	 * @return boolean
 	 *     Returns true if the from token is invalid
 	 */
-	public static function checkFormToken($terminate = true){
+	public static function checkJoomlaFormToken($terminate = true){
 		$isValid= JSession::checkToken();
 
 		if($terminate && !$isValid){
@@ -708,13 +788,13 @@ class Jom
 	 * @return string
 	 *     Renders the form fieldsets as tabs
 	 */
-	public static function renderFieldsetsAsTabs($form, $excludeHiddenFields = false){
+	public static function frRenderFieldsetsAsTabs($form, $excludeHiddenFields = false){
 		$fieldsets = $form->getFieldsets();
 
 		foreach ($fieldsets as $fieldset){
 			$displaydata['items'][] = [
 				'title' => Jom::translate($fieldset->label),
-				'content' => Jom::rederFieldset($form, $fieldset->name, $excludeHiddenFields),
+				'content' => Jom::frRenderFieldset($form, $fieldset->name, $excludeHiddenFields),
 			];
 		}
 		return Jom::layout(
@@ -737,14 +817,14 @@ class Jom
 	 * @return void
 	 *     Renders the form fieldset to the output
 	 */
-	public static function rederFieldset($form, $fieldsetName, $excludeHiddenFields = false){
+	public static function frRenderFieldset($form, $fieldsetName, $excludeHiddenFields = false){
 		$fields = $form->getFieldset($fieldsetName);
 		ob_start();
 		foreach ($fields as $field) {
 			if($excludeHiddenFields && ($field->getAttribute("type") === 'hidden')){
 				continue;
 			}
-			echo self::renderFieldOnce($form, $field->getAttribute("name"));
+			echo self::frRenderFieldOnce($form, $field->getAttribute("name"));
 		}
 		return ob_get_clean();
 	}
@@ -763,7 +843,7 @@ class Jom
 	 * @return string
 	 *     Renders a form field once
 	 */
-	public static function renderFieldOnce($form, $fieldName){
+	public static function frRenderFieldOnce($form, $fieldName){
 		$field = $form->getField($fieldName);
 
 		// Skip if field was rendered before
@@ -787,13 +867,13 @@ class Jom
 	 * @return string
 	 *     Renders the form hidden fields
 	 */
-	public static function renderHiddenFields($form){
+	public static function frRenderHiddenFields($form){
 		$fields = $form->getFieldset();
 		foreach ($fields as $field) {
 			if($field->getAttribute("type") !== 'hidden'){
 				continue;
 			}
-			self::renderFieldOnce($form, $field->getAttribute("name"));
+			self::frRenderFieldOnce($form, $field->getAttribute("name"));
 		}
 	}
 
@@ -809,7 +889,7 @@ class Jom
 	 *
 	 * @return void
 	 */
-	public static function setFieldValue($form, $name, $value){
+	public static function frSetFieldValue($form, $name, $value){
 		$form->setValue($name, '', $value);
 	}
 
@@ -824,7 +904,7 @@ class Jom
 	 * @return mixed
 	 *     Field value
 	 */
-	public static function getFieldValue($form, $name){
+	public static function frGetFieldValue($form, $name){
 		return $form->getValue($name);
 	}
 
@@ -839,7 +919,7 @@ class Jom
 	 * @return JformField
 	 *     Form field 
 	 */
-	public static function getField($form, $name){
+	public static function frGetField($form, $name){
 		return $form->getField($name);
 	}
 
@@ -855,8 +935,8 @@ class Jom
 	 *
 	 * @return void
 	 */
-	public static function addFieldOption($form, $name, $value, $text){
-		$field = self::getField($form, $name);
+	public static function frAddFieldOption($form, $name, $value, $text){
+		$field = self::frGetField($form, $name);
 		$field->addOption($text, ['value' => $value]);
 	}
 
@@ -870,9 +950,9 @@ class Jom
 	 *
 	 * @return void
 	 */  
-	public static function copy($source, $destination){
-		self::mkdir(dirname($destination));
-
+	public static function fsCopy($source, $destination){
+		self::fsCreateFolder(dirname($destination));
+ 
 		if(is_file($source)){
 			JFile::copy($source, $destination);
 		}else{
@@ -890,8 +970,8 @@ class Jom
 	 *
 	 * @return void
 	 */  
-	public static function move($source, $destination){
-		self::mkdir(dirname($destination));
+	public static function fsMove($source, $destination){
+		self::fsCreateFolder(dirname($destination));
 
 		if(is_file($source)){
 			JFile::move($source, $destination);
@@ -908,7 +988,7 @@ class Jom
 	 *
 	 * @return void
 	 */  
-	public static function delete($path){
+	public static function fsDelete($path){
 		if(is_file($path)){
 			JFile::delete($path);
 		}else{

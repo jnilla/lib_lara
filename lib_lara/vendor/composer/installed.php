@@ -22,7 +22,7 @@
         'jnilla/jom' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'edf93641a7b4cf34a54b11713bb36db87b45b5c9',
+            'reference' => '202a2c0f28a110d942c6eca5b16f48a417fb71d2',
             'type' => 'library',
             'install_path' => __DIR__ . '/../jnilla/jom',
             'aliases' => array(

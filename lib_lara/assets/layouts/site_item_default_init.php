@@ -12,7 +12,7 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.tabstate');
-Jom::css('media/lib_lara/css/site_item_default.css');
+Jom::addCss('media/lib_lara/css/site_item_default.css');
 
 // Define page heading
 $pageHeading = JText::_("LIB_LARA_EDITING_ITEM")." id ".$this->item->id;

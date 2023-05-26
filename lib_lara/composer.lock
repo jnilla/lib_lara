@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jnilla/jom.git",
-                "reference": "edf93641a7b4cf34a54b11713bb36db87b45b5c9"
+                "reference": "202a2c0f28a110d942c6eca5b16f48a417fb71d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jnilla/jom/zipball/edf93641a7b4cf34a54b11713bb36db87b45b5c9",
-                "reference": "edf93641a7b4cf34a54b11713bb36db87b45b5c9",
+                "url": "https://api.github.com/repos/jnilla/jom/zipball/202a2c0f28a110d942c6eca5b16f48a417fb71d2",
+                "reference": "202a2c0f28a110d942c6eca5b16f48a417fb71d2",
                 "shasum": ""
             },
             "default-branch": true,
@@ -51,7 +51,7 @@
                 "issues": "https://github.com/jnilla/jom/issues",
                 "source": "https://github.com/jnilla/jom/tree/main"
             },
-            "time": "2022-10-20T16:28:52+00:00"
+            "time": "2023-05-26T01:03:57+00:00"
         }
     ],
     "packages-dev": [],

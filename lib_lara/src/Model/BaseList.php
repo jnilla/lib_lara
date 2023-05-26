@@ -179,7 +179,7 @@ class BaseList extends JModelList{
 		$query = $db->getQuery(true);
 
 		// Select
-		$query->select($this->getState('list.select', 'DISTINCT a.*'));
+		$query->select($this->getState('list.select', 'a.*'));
 
 		// From
 		$query->from("#__{$componentNameInLowerCase}_{$pluralNameInLowerCase} AS a");

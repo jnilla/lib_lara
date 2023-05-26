@@ -12,14 +12,14 @@ use Jnilla\Jom\Jom as Jom;
 	<?php echo $this->toolbar; ?>
 
 	<div class="form-horizontal">
-		<?php echo Jom::renderFieldsetsAsTabs($this->form, true); ?>
+		<?php echo Jom::frRenderFieldsetsAsTabs($this->form, true); ?>
 
 		<!-- Hidden fields -->
 		<input type="hidden" name="option" value="<?php echo "com_$componentNameInLowerCase"; ?>"/>
 		<input type="hidden" name="task" value=""/>
 		<input type="hidden" name="layout" value="edit"/>
-		<?php echo Jom::formToken(); ?>
-		<?php echo Jom::renderHiddenFields($this->form); ?>
+		<?php echo Jom::getJoomlaFormToken(); ?>
+		<?php echo Jom::frRenderHiddenFields($this->form); ?>
 		<!-- Hidden fields - End -->
 	</div>
 </form>

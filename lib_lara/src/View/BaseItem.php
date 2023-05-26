@@ -51,7 +51,7 @@ class BaseItem extends JViewLegacy{
 		$this->state = $model->getState();
 		$this->item = $model->getItem();
 		$this->form = $model->getForm();
-		$this->isNew = Jom::getFieldValue($this->form, 'id') === null;
+		$this->isNew = Jom::frGetFieldValue($this->form, 'id') === null;
 
 		// Check for errors
 		if(count($errors = $this->get('Errors'))){
